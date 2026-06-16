@@ -98,11 +98,12 @@ export default function Home() {
 
   const [hoveredSign, setHoveredSign] = useState<string | null>(null);
 
-  const SUBTITLE = 'Choose a direction..';
+  const SUBTITLE = 'Choose your destination...';
   const [subtitleChars, setSubtitleChars] = useState(0);
   const [subtitleOpacity, setSubtitleOpacity] = useState(1);
   const [subtitleFade, setSubtitleFade] = useState(false);
   const [cursorVisible, setCursorVisible] = useState(false);
+  const [dropdownVisible, setDropdownVisible] = useState(false);
 
   useEffect(() => {
     let interval: ReturnType<typeof setInterval> | null = null;
@@ -133,6 +134,7 @@ export default function Home() {
         if (count >= SUBTITLE.length) {
           clearInterval(interval!);
           interval = null;
+          setDropdownVisible(true);
           // Hold 3s, then blink 3× (sharp, 150ms off / 150ms on each)
           t(3000, () => {
             setCursorVisible(false);
@@ -249,49 +251,99 @@ export default function Home() {
       <div className="absolute inset-y-0 right-0 w-48 z-20 pointer-events-none hidden md:block"
         style={{ background: 'linear-gradient(to left, #000 0%, transparent 100%)' }} />
 
-      <div className="absolute top-10 left-12 z-10">
+      {/* Desktop logo */}
+      <div className="hidden md:block absolute top-10 left-12 z-10">
         <img src="/images/og-peanut-title.png" alt="OG Peanut" className="h-[80px] w-auto" />
       </div>
 
-      {/* Artboard: sized to the initial viewport, transforms to track the video's
-          object-cover scale+crop so all overlays stay locked to the artwork.
-          Renders only after mount to avoid SSR/client hydration mismatch. */}
-      {/* Mobile path markers — prototype only. One text label per destination,
-          sized by perspective depth: largest at the bottom (closest to viewer),
-          progressively smaller toward the vanishing point. */}
-      <div className="block md:hidden absolute inset-0 z-30 pointer-events-none">
-        {([
-          { id: 'discord',   label: 'DISCORD',     top: '80%', left: '44%', fontSize: '2.3rem',  rotate: '-3deg'  },
-          { id: 'mint',      label: 'MINT',         top: '70%', left: '54%', fontSize: '1.85rem', rotate: '-1deg'  },
-          { id: 'radio',     label: 'RADIO',        top: '60%', left: '60%', fontSize: '1.55rem', rotate: '2deg'   },
-          { id: 'poker',     label: 'POKER',        top: '49%', left: '55%', fontSize: '1.3rem',  rotate: '1deg'   },
-          { id: 'pq',        label: 'PEAQUILIZER',  top: '38%', left: '46%', fontSize: '1.05rem', rotate: '-2deg'  },
-          { id: 'nutaverse', label: 'NUTAVERSE',    top: '29%', left: '43%', fontSize: '0.87rem', rotate: '3deg'   },
-        ] as const).map(({ id, label, top, left, fontSize, rotate }) => (
-          <a
-            key={id}
-            href={SIGN_URLS[id]}
-            {...(id === 'discord' ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
+      {/* Mobile header group: logo + subtitle + destination dropdown */}
+      <div className="block md:hidden absolute top-8 left-6 z-40">
+        <img src="/images/og-peanut-title.png" alt="OG Peanut" className="h-[72px] w-auto" />
+        <p
+          className="mt-2 text-base font-bold whitespace-nowrap"
+          style={{
+            fontFamily: 'var(--font-cinzel)',
+            color: '#e6d3a0',
+            textShadow: '0 1px 0 rgba(255,220,160,0.15), 0 2px 4px rgba(0,0,0,0.8)',
+            opacity: subtitleOpacity,
+            transition: subtitleFade ? 'opacity 0.5s ease' : 'none',
+          }}
+        >
+          {SUBTITLE.slice(0, subtitleChars)}
+          {cursorVisible && (
+            <span aria-hidden="true" style={{ animation: 'blockCursorBlink 0.9s steps(1, end) infinite' }}>▋</span>
+          )}
+        </p>
+        <div
+          className="mt-2"
+          style={{
+            position: 'relative',
+            display: 'inline-block',
+            opacity: dropdownVisible ? 1 : 0,
+            transition: 'opacity 0.5s ease',
+            pointerEvents: dropdownVisible ? 'auto' : 'none',
+          }}
+        >
+          <select
+            defaultValue=""
+            onChange={(e) => {
+              const id = e.target.value;
+              if (!id) return;
+              const url = SIGN_URLS[id];
+              if (id === 'discord') {
+                window.open(url, '_blank', 'noopener,noreferrer');
+              } else {
+                window.location.href = url;
+              }
+              (e.target as HTMLSelectElement).value = '';
+            }}
             style={{
-              position: 'absolute',
-              top,
-              left,
-              fontSize,
-              transform: `rotate(${rotate})`,
               fontFamily: 'var(--font-cinzel)',
               fontWeight: 700,
               color: '#e2c98a',
-              opacity: 0.88,
+              background: 'rgba(0,0,0,0.65)',
+              border: '1px solid rgba(226,201,138,0.45)',
+              borderRadius: '4px',
+              padding: '7px 32px 7px 12px',
+              fontSize: '0.85rem',
+              letterSpacing: '0.05em',
+              appearance: 'none',
+              WebkitAppearance: 'none',
+              cursor: 'pointer',
+              minWidth: '210px',
               textShadow: shadowLayers,
-              letterSpacing: '0.04em',
-              textDecoration: 'none',
-              pointerEvents: 'auto',
-              whiteSpace: 'nowrap',
             }}
           >
-            {label}
-          </a>
-        ))}
+            <option value="" disabled style={{ color: '#888', background: '#111' }}></option>
+            {SIGNS.map((sign) => {
+              const labels: Record<string, string> = {
+                discord: 'Discord',
+                mint: 'Mint',
+                radio: 'Radio',
+                poker: 'Poker',
+                pq: 'Peaquilizer',
+                nutaverse: 'Nutaverse',
+              };
+              return (
+                <option key={sign.id} value={sign.id} style={{ color: '#e2c98a', background: '#111' }}>
+                  {labels[sign.id]}
+                </option>
+              );
+            })}
+          </select>
+          <span
+            aria-hidden="true"
+            style={{
+              position: 'absolute',
+              right: '10px',
+              top: '50%',
+              transform: 'translateY(-50%)',
+              color: '#e2c98a',
+              pointerEvents: 'none',
+              fontSize: '0.75rem',
+            }}
+          >▾</span>
+        </div>
       </div>
 
       {artboard && <div
