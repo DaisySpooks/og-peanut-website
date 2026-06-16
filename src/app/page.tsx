@@ -226,7 +226,7 @@ export default function Home() {
         playsInline
         className="absolute inset-0 h-full w-full object-cover block md:hidden" style={{ objectPosition: '25% center' }}
       >
-        <source src="/video/hero-mobile.MOV" type="video/mp4" />
+        <source src="/video/hero-mobile.mp4" type="video/mp4" />
       </video>
       <video
         autoPlay
