@@ -224,7 +224,7 @@ export default function Home() {
         muted
         loop
         playsInline
-        className="absolute inset-0 h-full w-full object-cover block md:hidden"
+        className="absolute inset-0 h-full w-full object-cover block md:hidden" style={{ objectPosition: '25% center' }}
       >
         <source src="/video/hero-mobile.MOV" type="video/mp4" />
       </video>
@@ -261,12 +261,12 @@ export default function Home() {
           progressively smaller toward the vanishing point. */}
       <div className="block md:hidden absolute inset-0 z-30 pointer-events-none">
         {([
-          { id: 'discord',   label: 'DISCORD',     top: '71%', left: '34%', fontSize: '2.3rem',  rotate: '-5deg'  },
-          { id: 'mint',      label: 'MINT',         top: '61%', left: '46%', fontSize: '1.85rem', rotate: '-2deg'  },
-          { id: 'radio',     label: 'RADIO',        top: '52%', left: '38%', fontSize: '1.55rem', rotate: '1deg'   },
-          { id: 'poker',     label: 'POKER',        top: '43%', left: '44%', fontSize: '1.3rem',  rotate: '3deg'   },
-          { id: 'pq',        label: 'PEAQUILIZER',  top: '35%', left: '36%', fontSize: '1.05rem', rotate: '-1deg'  },
-          { id: 'nutaverse', label: 'NUTAVERSE',    top: '27%', left: '42%', fontSize: '0.87rem', rotate: '4deg'   },
+          { id: 'discord',   label: 'DISCORD',     top: '80%', left: '44%', fontSize: '2.3rem',  rotate: '-3deg'  },
+          { id: 'mint',      label: 'MINT',         top: '70%', left: '54%', fontSize: '1.85rem', rotate: '-1deg'  },
+          { id: 'radio',     label: 'RADIO',        top: '60%', left: '60%', fontSize: '1.55rem', rotate: '2deg'   },
+          { id: 'poker',     label: 'POKER',        top: '49%', left: '55%', fontSize: '1.3rem',  rotate: '1deg'   },
+          { id: 'pq',        label: 'PEAQUILIZER',  top: '38%', left: '46%', fontSize: '1.05rem', rotate: '-2deg'  },
+          { id: 'nutaverse', label: 'NUTAVERSE',    top: '29%', left: '43%', fontSize: '0.87rem', rotate: '3deg'   },
         ] as const).map(({ id, label, top, left, fontSize, rotate }) => (
           <a
             key={id}
