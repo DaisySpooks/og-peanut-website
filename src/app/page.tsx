@@ -224,7 +224,16 @@ export default function Home() {
         muted
         loop
         playsInline
-        className="absolute inset-0 h-full w-full object-cover md:object-contain"
+        className="absolute inset-0 h-full w-full object-cover block md:hidden"
+      >
+        <source src="/video/hero-mobile.MOV" type="video/mp4" />
+      </video>
+      <video
+        autoPlay
+        muted
+        loop
+        playsInline
+        className="absolute inset-0 h-full w-full object-contain hidden md:block"
       >
         <source src="/video/hero-desktop.mp4" type="video/mp4" />
       </video>
@@ -247,7 +256,46 @@ export default function Home() {
       {/* Artboard: sized to the initial viewport, transforms to track the video's
           object-cover scale+crop so all overlays stay locked to the artwork.
           Renders only after mount to avoid SSR/client hydration mismatch. */}
+      {/* Mobile path markers — prototype only. One text label per destination,
+          sized by perspective depth: largest at the bottom (closest to viewer),
+          progressively smaller toward the vanishing point. */}
+      <div className="block md:hidden absolute inset-0 z-30 pointer-events-none">
+        {([
+          { id: 'discord',   label: 'DISCORD',     top: '71%', left: '34%', fontSize: '2.3rem',  rotate: '-5deg'  },
+          { id: 'mint',      label: 'MINT',         top: '61%', left: '46%', fontSize: '1.85rem', rotate: '-2deg'  },
+          { id: 'radio',     label: 'RADIO',        top: '52%', left: '38%', fontSize: '1.55rem', rotate: '1deg'   },
+          { id: 'poker',     label: 'POKER',        top: '43%', left: '44%', fontSize: '1.3rem',  rotate: '3deg'   },
+          { id: 'pq',        label: 'PEAQUILIZER',  top: '35%', left: '36%', fontSize: '1.05rem', rotate: '-1deg'  },
+          { id: 'nutaverse', label: 'NUTAVERSE',    top: '27%', left: '42%', fontSize: '0.87rem', rotate: '4deg'   },
+        ] as const).map(({ id, label, top, left, fontSize, rotate }) => (
+          <a
+            key={id}
+            href={SIGN_URLS[id]}
+            {...(id === 'discord' ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
+            style={{
+              position: 'absolute',
+              top,
+              left,
+              fontSize,
+              transform: `rotate(${rotate})`,
+              fontFamily: 'var(--font-cinzel)',
+              fontWeight: 700,
+              color: '#e2c98a',
+              opacity: 0.88,
+              textShadow: shadowLayers,
+              letterSpacing: '0.04em',
+              textDecoration: 'none',
+              pointerEvents: 'auto',
+              whiteSpace: 'nowrap',
+            }}
+          >
+            {label}
+          </a>
+        ))}
+      </div>
+
       {artboard && <div
+        className="hidden md:block"
         style={{
           position: 'absolute',
           top: 0,
