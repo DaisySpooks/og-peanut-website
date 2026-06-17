@@ -284,6 +284,7 @@ export default function Home() {
             textShadow: '0 1px 0 rgba(255,220,160,0.15), 0 2px 4px rgba(0,0,0,0.8)',
             opacity: subtitleOpacity,
             transition: subtitleFade ? 'opacity 0.5s ease' : 'none',
+            marginLeft: '48px',
           }}
         >
           <span style={{
@@ -303,7 +304,7 @@ export default function Home() {
             )}
           </span>
         </p>
-        <div className="mt-2">
+        <div className="mt-2" style={{ marginLeft: '48px' }}>
           {(() => {
             const labels: Record<string, string> = {
               discord: 'Discord',
