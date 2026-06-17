@@ -346,7 +346,7 @@ export default function Home() {
                 mint: 'Mint',
                 radio: 'Radio',
                 poker: 'Poker',
-                pq: 'Peaquilizer',
+                pq: 'Peaqualizer',
                 nutaverse: 'Nutaverse',
               };
               return SIGNS.map((sign, i) => {
@@ -555,7 +555,7 @@ export default function Home() {
                 opacity: 0.7,
               }}
             >
-              PEAQUILIZER
+              PEAQUALIZER
             </span>
           </div>
 
