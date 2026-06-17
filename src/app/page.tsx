@@ -274,17 +274,16 @@ export default function Home() {
       </div>
 
       {/* Mobile header group: logo + subtitle + destination dropdown */}
-      <div className="block md:hidden absolute top-8 left-[72px] z-40">
-        <img src="/images/og-peanut-title.png" alt="OG Peanut" className="h-[72px] w-auto" />
+      <div className="block md:hidden absolute top-8 inset-x-0 z-40">
+        <img src="/images/og-peanut-title.png" alt="OG Peanut" className="h-[72px] w-auto ml-[6px]" />
         <p
-          className="mt-2 text-base font-bold whitespace-nowrap"
+          className="mt-2 pl-20 text-right text-base font-bold whitespace-nowrap"
           style={{
             fontFamily: 'var(--font-cinzel)',
             color: '#e6d3a0',
             textShadow: '0 1px 0 rgba(255,220,160,0.15), 0 2px 4px rgba(0,0,0,0.8)',
             opacity: subtitleOpacity,
             transition: subtitleFade ? 'opacity 0.5s ease' : 'none',
-            marginLeft: '48px',
           }}
         >
           <span style={{
@@ -304,7 +303,7 @@ export default function Home() {
             )}
           </span>
         </p>
-        <div className="mt-2" style={{ marginLeft: '48px' }}>
+        <div className="mt-2 pl-20 text-right">
           {(() => {
             const labels: Record<string, string> = {
               discord: 'Discord',
