@@ -174,7 +174,7 @@ export default function Home() {
   useEffect(() => {
     if (!dropdownVisible) return;
     const timers = SIGNS.map((_, i) =>
-      setTimeout(() => setVisibleCount(i + 1), i * 100)
+      setTimeout(() => setVisibleCount(i + 1), i * 200)
     );
     return () => timers.forEach(clearTimeout);
   }, [dropdownVisible]);
@@ -303,7 +303,23 @@ export default function Home() {
             )}
           </span>
         </p>
-        <div className="mt-2 pl-20 text-right">
+        <div className="mt-2 pl-20 pr-[14px]" style={{ display: 'flex', justifyContent: 'flex-end' }}>
+          <div style={{ position: 'relative', textAlign: 'right' }}>
+          <div
+            aria-hidden="true"
+            style={{
+              position: 'absolute',
+              inset: '-2px -14px',
+              background: 'rgba(0,0,0,0.32)',
+              backdropFilter: 'blur(3px)',
+              WebkitBackdropFilter: 'blur(3px)',
+              borderRadius: '3px',
+              transform: `scaleY(${visibleCount / SIGNS.length})`,
+              transformOrigin: 'top',
+              transition: 'transform 0.25s ease',
+              pointerEvents: 'none',
+            }}
+          />
           {(() => {
             const labels: Record<string, string> = {
               discord: 'Discord',
@@ -342,6 +358,7 @@ export default function Home() {
               );
             });
           })()}
+          </div>
         </div>
       </div>
 
