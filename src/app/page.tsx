@@ -269,10 +269,22 @@ export default function Home() {
             transition: subtitleFade ? 'opacity 0.5s ease' : 'none',
           }}
         >
-          {SUBTITLE.slice(0, subtitleChars)}
-          {cursorVisible && (
-            <span aria-hidden="true" style={{ animation: 'blockCursorBlink 0.9s steps(1, end) infinite' }}>▋</span>
-          )}
+          <span style={{
+            display: 'inline-block',
+            background: 'rgba(0,0,0,0.32)',
+            backdropFilter: 'blur(3px)',
+            WebkitBackdropFilter: 'blur(3px)',
+            paddingLeft: '10px',
+            paddingRight: '10px',
+            paddingTop: '2px',
+            paddingBottom: '2px',
+            borderRadius: '3px',
+          }}>
+            {SUBTITLE.slice(0, subtitleChars)}
+            {cursorVisible && (
+              <span aria-hidden="true" style={{ animation: 'blockCursorBlink 0.9s steps(1, end) infinite' }}>▋</span>
+            )}
+          </span>
         </p>
         <div
           className="mt-2"
@@ -465,13 +477,25 @@ export default function Home() {
             transition: subtitleFade ? 'opacity 0.5s ease' : 'none',
           }}
         >
-          {SUBTITLE.slice(0, subtitleChars)}
-          <span
-            aria-hidden="true"
-            style={{
-              animation: 'blockCursorBlink 0.9s steps(1, end) infinite',
-            }}
-          >▋</span>
+          <span style={{
+            display: 'inline-block',
+            background: 'rgba(0,0,0,0.32)',
+            backdropFilter: 'blur(3px)',
+            WebkitBackdropFilter: 'blur(3px)',
+            paddingLeft: '10px',
+            paddingRight: '10px',
+            paddingTop: '2px',
+            paddingBottom: '2px',
+            borderRadius: '3px',
+          }}>
+            {SUBTITLE.slice(0, subtitleChars)}
+            <span
+              aria-hidden="true"
+              style={{
+                animation: 'blockCursorBlink 0.9s steps(1, end) infinite',
+              }}
+            >▋</span>
+          </span>
         </p>
 
         {/* All text overlays */}
