@@ -453,8 +453,9 @@ export default function Home() {
         {/* Subtitle — anchored via the same ocTransform artboard as the sign boards.
             Artboard coords (678, 340) = parent top-10/left-12 (40+300, 48+630) at reference viewport. */}
         <p
-          className="absolute left-[678px] top-[340px] z-10 text-3xl font-bold text-[#e6d3a0] whitespace-nowrap"
+          className="absolute left-[660px] top-[340px] z-10 font-bold text-[#e6d3a0] whitespace-nowrap"
           style={{
+            fontSize: '1.5rem',
             fontFamily: "var(--font-cinzel)",
             textShadow: `
       0 1px 0 rgba(255,220,160,0.15),
