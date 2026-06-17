@@ -122,7 +122,7 @@ export default function Home() {
     }
 
     function startCycle() {
-      if (introCompleteRef.current && window.innerWidth < DESKTOP_BREAKPOINT) return;
+      if (introCompleteRef.current) return;
       clear();
       setSubtitleFade(false);
       setSubtitleOpacity(1);
@@ -486,42 +486,6 @@ export default function Home() {
           </div>
         </div>
 
-        {/* Subtitle — anchored via the same ocTransform artboard as the sign boards.
-            Artboard coords (678, 340) = parent top-10/left-12 (40+300, 48+630) at reference viewport. */}
-        <p
-          className="absolute left-[660px] top-[340px] z-10 font-bold text-[#e6d3a0]/60 whitespace-nowrap"
-          style={{
-            fontSize: '1.5rem',
-            fontFamily: "var(--font-cinzel)",
-            textShadow: `
-      0 1px 0 rgba(255,220,160,0.15),
-      0 2px 4px rgba(0,0,0,0.8)
-    `,
-            opacity: subtitleOpacity,
-            transition: subtitleFade ? 'opacity 0.5s ease' : 'none',
-          }}
-        >
-          <span style={{
-            display: 'inline-block',
-            background: 'rgba(0,0,0,0.32)',
-            backdropFilter: 'blur(3px)',
-            WebkitBackdropFilter: 'blur(3px)',
-            paddingLeft: '10px',
-            paddingRight: '10px',
-            paddingTop: '2px',
-            paddingBottom: '2px',
-            borderRadius: '3px',
-          }}>
-            {SUBTITLE.slice(0, subtitleChars)}
-            <span
-              aria-hidden="true"
-              style={{
-                animation: 'blockCursorBlink 0.9s steps(1, end) infinite',
-              }}
-            >▋</span>
-          </span>
-        </p>
-
         {/* All text overlays */}
         <div className="absolute right-0 top-0 z-[60]">
 
@@ -609,6 +573,57 @@ export default function Home() {
             </span>
           </div>
         </div>
+      </div>}
+
+      {/* Desktop subtitle — separate from artboard so it sits above the overlay (z-30).
+          Same transform as the artboard; identical visual position. */}
+      {artboard && <div
+        className="hidden md:block"
+        style={{
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          width: artboard.w,
+          height: artboard.h,
+          transformOrigin: '0 0',
+          transform: `translate(${artboard.tx}px, ${artboard.ty}px) scale(${artboard.scale})`,
+          pointerEvents: 'none',
+          zIndex: 40,
+        }}
+      >
+        <p
+          className="absolute left-[660px] top-[340px] font-bold text-[#e6d3a0]/60 whitespace-nowrap"
+          style={{
+            fontSize: '1.5rem',
+            fontFamily: 'var(--font-cinzel)',
+            textShadow: `
+      0 1px 0 rgba(255,220,160,0.15),
+      0 2px 4px rgba(0,0,0,0.8)
+    `,
+            opacity: introComplete ? 1 : subtitleOpacity,
+            transition: introComplete ? 'none' : subtitleFade ? 'opacity 0.5s ease' : 'none',
+          }}
+        >
+          <span style={{
+            display: 'inline-block',
+            background: 'rgba(0,0,0,0.32)',
+            backdropFilter: 'blur(3px)',
+            WebkitBackdropFilter: 'blur(3px)',
+            paddingLeft: '10px',
+            paddingRight: '10px',
+            paddingTop: '2px',
+            paddingBottom: '2px',
+            borderRadius: '3px',
+          }}>
+            {introComplete ? SUBTITLE : SUBTITLE.slice(0, subtitleChars)}
+            {!introComplete && (
+              <span
+                aria-hidden="true"
+                style={{ animation: 'blockCursorBlink 0.9s steps(1, end) infinite' }}
+              >▋</span>
+            )}
+          </span>
+        </p>
       </div>}
     </main>
   );
