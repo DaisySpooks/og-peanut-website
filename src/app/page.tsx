@@ -501,11 +501,15 @@ export default function Home() {
         {/* All text overlays */}
         <div className="absolute right-0 top-0 z-[60]">
 
-          <div className="absolute right-[185px] top-[145px]">
+          <div className="absolute right-[185px] top-[150px]">
             <span
               className={`inline-block text-4xl font-bold transition-all duration-200 ${hoveredSign === 'discord' ? 'scale-[1.02] brightness-105' : ''
                 }`}
-              style={textStyle('rotate(-7deg)')}
+              style={{
+                ...textStyle('rotate(-7deg)'),
+                fontFamily: 'var(--font-cinzel)',
+                opacity: 0.7,
+              }}
             >
               DISCORD
             </span>
@@ -515,7 +519,11 @@ export default function Home() {
             <span
               className={`inline-block text-4xl font-bold transition-all duration-200 ${hoveredSign === 'mint' ? 'scale-[1.02] brightness-105' : ''
                 }`}
-              style={textStyle('rotate(-3deg)')}
+              style={{
+                ...textStyle('rotate(-3deg)'),
+                fontFamily: 'var(--font-cinzel)',
+                opacity: 0.7,
+              }}
             >
               MINT
             </span>
@@ -525,7 +533,11 @@ export default function Home() {
             <span
               className={`inline-block text-4xl font-bold transition-all duration-200 ${hoveredSign === 'radio' ? 'scale-[1.02] brightness-105' : ''
                 }`}
-              style={textStyle('rotate(-1deg)')}
+              style={{
+                ...textStyle('rotate(-1deg)'),
+                fontFamily: 'var(--font-cinzel)',
+                opacity: 0.7,
+              }}
             >
               RADIO
             </span>
@@ -535,27 +547,39 @@ export default function Home() {
             <span
               className={`inline-block text-4xl font-bold transition-all duration-200 ${hoveredSign === 'poker' ? 'scale-[1.02] brightness-105' : ''
                 }`}
-              style={textStyle('rotate(1deg)')}
+              style={{
+                ...textStyle('rotate(2deg)'),
+                fontFamily: 'var(--font-cinzel)',
+                opacity: 0.7,
+              }}
             >
               POKER
             </span>
           </div>
 
-          <div className="absolute right-[180px] top-[435px]">
+          <div className="absolute right-[185px] top-[432px]">
             <span
-              className={`inline-block text-3xl font-bold transition-all duration-200 ${hoveredSign === 'pq' ? 'scale-[1.02] brightness-105' : ''
+              className={`inline-block text-[1.75rem] font-bold transition-all duration-200 ${hoveredSign === 'pq' ? 'scale-[1.02] brightness-105' : ''
                 }`}
-              style={textStyle('rotate(5deg)')}
+              style={{
+                ...textStyle('rotate(5deg)'),
+                fontFamily: 'var(--font-cinzel)',
+                opacity: 0.7,
+              }}
             >
               PEAQUILIZER
             </span>
           </div>
 
-          <div className="absolute right-[190px] top-[500px]">
+          <div className="absolute right-[190px] top-[503px]">
             <span
               className={`inline-block text-3xl font-bold transition-all duration-200 ${hoveredSign === 'nutaverse' ? 'scale-[1.02] brightness-105' : ''
                 }`}
-              style={textStyle('rotate(8deg)')}
+              style={{
+                ...textStyle('rotate(8deg)'),
+                fontFamily: 'var(--font-cinzel)',
+                opacity: 0.7,
+              }}
             >
               NUTAVERSE
             </span>
