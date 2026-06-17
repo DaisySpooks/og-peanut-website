@@ -274,7 +274,7 @@ export default function Home() {
       </div>
 
       {/* Mobile header group: logo + subtitle + destination dropdown */}
-      <div className="block md:hidden absolute top-8 left-6 z-40">
+      <div className="block md:hidden absolute top-8 left-[72px] z-40">
         <img src="/images/og-peanut-title.png" alt="OG Peanut" className="h-[72px] w-auto" />
         <p
           className="mt-2 text-base font-bold whitespace-nowrap"
