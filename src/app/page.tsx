@@ -103,8 +103,9 @@ export default function Home() {
   const [subtitleOpacity, setSubtitleOpacity] = useState(1);
   const [subtitleFade, setSubtitleFade] = useState(false);
   const [cursorVisible, setCursorVisible] = useState(false);
-  const [dropdownVisible, setDropdownVisible] = useState(false);
   const [visibleCount, setVisibleCount] = useState(0);
+  const [introComplete, setIntroComplete] = useState(false);
+  const introCompleteRef = useRef(false);
 
   useEffect(() => {
     let interval: ReturnType<typeof setInterval> | null = null;
@@ -121,11 +122,13 @@ export default function Home() {
     }
 
     function startCycle() {
+      if (introCompleteRef.current && window.innerWidth < DESKTOP_BREAKPOINT) return;
       clear();
       setSubtitleFade(false);
       setSubtitleOpacity(1);
       setSubtitleChars(0);
       setCursorVisible(true);
+      setVisibleCount(0);
 
       const charDelay = 180 / 1;
       let count = 0;
@@ -135,8 +138,7 @@ export default function Home() {
         if (count >= SUBTITLE.length) {
           clearInterval(interval!);
           interval = null;
-          setDropdownVisible(true);
-          // Hold 3s, then blink 3× (sharp, 150ms off / 150ms on each)
+          // Hold 1s, then blink 3× (sharp, 150ms off / 150ms on each)
           t(1000, () => {
             setCursorVisible(false);
             setSubtitleOpacity(0);
@@ -154,7 +156,12 @@ export default function Home() {
                       t(150, () => {
                         setSubtitleFade(true);
                         setSubtitleOpacity(0);
-                        // 0.5s fade + 2s hidden, then restart
+                        // Reveal menu after 400ms (overlay peak window) at same 200ms cascade speed
+                        SIGNS.forEach((_, i) => t(400 + i * 200, () => {
+                          setVisibleCount(i + 1);
+                          if (i === 0) { setIntroComplete(true); introCompleteRef.current = true; }
+                        }));
+                        // 0.5s fade + ~4.5s hidden, then restart
                         t(5000, startCycle);
                       });
                     });
@@ -170,14 +177,6 @@ export default function Home() {
     startCycle();
     return clear;
   }, []);
-
-  useEffect(() => {
-    if (!dropdownVisible) return;
-    const timers = SIGNS.map((_, i) =>
-      setTimeout(() => setVisibleCount(i + 1), i * 200)
-    );
-    return () => timers.forEach(clearTimeout);
-  }, [dropdownVisible]);
 
   const isOpaqueAt = useAlphaHitTesters();
   const signElsRef = useRef<Map<string, HTMLImageElement>>(new Map());
@@ -223,6 +222,13 @@ export default function Home() {
     return () => ro.disconnect();
   }, []);
 
+  const overlayOpacity = introComplete ? 0 : subtitleFade ? 0 : 1;
+  const overlayTransition = !subtitleFade && visibleCount === 0
+    ? 'none'
+    : visibleCount > 0
+      ? 'opacity 1000ms ease'
+      : 'opacity 400ms ease';
+
   return (
     <main className="relative h-screen w-screen overflow-hidden bg-black">
       <style>{`
@@ -250,6 +256,13 @@ export default function Home() {
         <source src="/video/hero-desktop.mp4" type="video/mp4" />
       </video>
 
+      {/* Black transition overlay — driven by subtitle lifecycle, never blocks interaction */}
+      <div
+        aria-hidden="true"
+        className="absolute inset-0 z-30 bg-black pointer-events-none"
+        style={{ opacity: overlayOpacity, transition: overlayTransition }}
+      />
+
       {/* Atmospheric edge gradients — desktop only. Cover letterbox/pillarbox bars
           and softly vignette into the scene regardless of viewport aspect ratio. */}
       <div className="absolute inset-x-0 top-0 h-48 z-20 pointer-events-none hidden md:block"
@@ -275,15 +288,22 @@ export default function Home() {
 
       {/* Mobile header group: logo + subtitle + destination dropdown */}
       <div className="block md:hidden absolute top-8 inset-x-0 z-40">
-        <img src="/images/og-peanut-title.png" alt="OG Peanut" className="h-[72px] w-auto ml-[6px]" />
+        <img
+          src="/images/og-peanut-title.png"
+          alt="OG Peanut"
+          className="h-[72px] w-auto ml-[6px]"
+          style={{
+            opacity: introComplete ? 1 : 0,
+          }}
+        />
         <p
           className="mt-2 pl-20 text-right text-base font-bold whitespace-nowrap"
           style={{
             fontFamily: 'var(--font-cinzel)',
             color: '#e6d3a0',
             textShadow: '0 1px 0 rgba(255,220,160,0.15), 0 2px 4px rgba(0,0,0,0.8)',
-            opacity: subtitleOpacity,
-            transition: subtitleFade ? 'opacity 0.5s ease' : 'none',
+            opacity: introComplete ? 1 : subtitleOpacity,
+            transition: introComplete ? 'none' : subtitleFade ? 'opacity 0.5s ease' : 'none',
           }}
         >
           <span style={{
@@ -297,67 +317,67 @@ export default function Home() {
             paddingBottom: '2px',
             borderRadius: '3px',
           }}>
-            {SUBTITLE.slice(0, subtitleChars)}
-            {cursorVisible && (
+            {introComplete ? SUBTITLE : SUBTITLE.slice(0, subtitleChars)}
+            {!introComplete && cursorVisible && (
               <span aria-hidden="true" style={{ animation: 'blockCursorBlink 0.9s steps(1, end) infinite' }}>▋</span>
             )}
           </span>
         </p>
         <div className="mt-2 pl-20 pr-[14px]" style={{ display: 'flex', justifyContent: 'flex-end' }}>
           <div style={{ position: 'relative', textAlign: 'right' }}>
-          <div
-            aria-hidden="true"
-            style={{
-              position: 'absolute',
-              inset: '-2px -14px',
-              background: 'rgba(0,0,0,0.32)',
-              backdropFilter: 'blur(3px)',
-              WebkitBackdropFilter: 'blur(3px)',
-              borderRadius: '3px',
-              transform: `scaleY(${visibleCount / SIGNS.length})`,
-              transformOrigin: 'top',
-              transition: 'transform 0.25s ease',
-              pointerEvents: 'none',
-            }}
-          />
-          {(() => {
-            const labels: Record<string, string> = {
-              discord: 'Discord',
-              mint: 'Mint',
-              radio: 'Radio',
-              poker: 'Poker',
-              pq: 'Peaquilizer',
-              nutaverse: 'Nutaverse',
-            };
-            return SIGNS.map((sign, i) => {
-              const visible = i < visibleCount;
-              return (
-                <a
-                  key={sign.id}
-                  href={SIGN_URLS[sign.id]}
-                  target={sign.id === 'discord' ? '_blank' : undefined}
-                  rel={sign.id === 'discord' ? 'noopener noreferrer' : undefined}
-                  style={{
-                    display: 'block',
-                    fontFamily: 'var(--font-cinzel)',
-                    fontWeight: 700,
-                    color: '#e2c98a',
-                    fontSize: '0.85rem',
-                    letterSpacing: '0.05em',
-                    textShadow: shadowLayers,
-                    textDecoration: 'none',
-                    padding: '4px 0',
-                    opacity: visible ? 1 : 0,
-                    transform: visible ? 'translateY(0)' : 'translateY(-4px)',
-                    transition: 'opacity 0.25s ease, transform 0.25s ease',
-                    pointerEvents: visible ? 'auto' : 'none',
-                  }}
-                >
-                  {labels[sign.id]}
-                </a>
-              );
-            });
-          })()}
+            <div
+              aria-hidden="true"
+              style={{
+                position: 'absolute',
+                inset: '-2px -14px',
+                background: 'rgba(0,0,0,0.32)',
+                backdropFilter: 'blur(3px)',
+                WebkitBackdropFilter: 'blur(3px)',
+                borderRadius: '3px',
+                transform: `scaleY(${visibleCount / SIGNS.length})`,
+                transformOrigin: 'top',
+                transition: 'transform 0.25s ease',
+                pointerEvents: 'none',
+              }}
+            />
+            {(() => {
+              const labels: Record<string, string> = {
+                discord: 'Discord',
+                mint: 'Mint',
+                radio: 'Radio',
+                poker: 'Poker',
+                pq: 'Peaquilizer',
+                nutaverse: 'Nutaverse',
+              };
+              return SIGNS.map((sign, i) => {
+                const visible = i < visibleCount;
+                return (
+                  <a
+                    key={sign.id}
+                    href={SIGN_URLS[sign.id]}
+                    target={sign.id === 'discord' ? '_blank' : undefined}
+                    rel={sign.id === 'discord' ? 'noopener noreferrer' : undefined}
+                    style={{
+                      display: 'block',
+                      fontFamily: 'var(--font-cinzel)',
+                      fontWeight: 700,
+                      color: '#e2c98a',
+                      fontSize: '0.85rem',
+                      letterSpacing: '0.05em',
+                      textShadow: shadowLayers,
+                      textDecoration: 'none',
+                      padding: '4px 0',
+                      opacity: visible ? 1 : 0,
+                      transform: visible ? 'translateY(0)' : 'translateY(-4px)',
+                      transition: 'opacity 0.25s ease, transform 0.25s ease',
+                      pointerEvents: visible ? 'auto' : 'none',
+                    }}
+                  >
+                    {labels[sign.id]}
+                  </a>
+                );
+              });
+            })()}
           </div>
         </div>
       </div>
