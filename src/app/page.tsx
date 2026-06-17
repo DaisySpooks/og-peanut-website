@@ -136,7 +136,7 @@ export default function Home() {
           interval = null;
           setDropdownVisible(true);
           // Hold 3s, then blink 3× (sharp, 150ms off / 150ms on each)
-          t(3000, () => {
+          t(1000, () => {
             setCursorVisible(false);
             setSubtitleOpacity(0);
             t(150, () => {
@@ -154,7 +154,7 @@ export default function Home() {
                         setSubtitleFade(true);
                         setSubtitleOpacity(0);
                         // 0.5s fade + 2s hidden, then restart
-                        t(2500, startCycle);
+                        t(5000, startCycle);
                       });
                     });
                   });
@@ -252,8 +252,15 @@ export default function Home() {
         style={{ background: 'linear-gradient(to left, #000 0%, transparent 100%)' }} />
 
       {/* Desktop logo */}
-      <div className="hidden md:block absolute top-10 left-12 z-10">
-        <img src="/images/og-peanut-title.png" alt="OG Peanut" className="h-[80px] w-auto" />
+      <div className="hidden md:block absolute top-10 left-12 z-20">
+        <img
+          src="/images/og-peanut-title.png"
+          alt="OG Peanut"
+          className="h-[80px] w-auto"
+          style={{
+            opacity: 0.7,
+          }}
+        />
       </div>
 
       {/* Mobile header group: logo + subtitle + destination dropdown */}
@@ -465,7 +472,7 @@ export default function Home() {
         {/* Subtitle — anchored via the same ocTransform artboard as the sign boards.
             Artboard coords (678, 340) = parent top-10/left-12 (40+300, 48+630) at reference viewport. */}
         <p
-          className="absolute left-[660px] top-[340px] z-10 font-bold text-[#e6d3a0] whitespace-nowrap"
+          className="absolute left-[660px] top-[340px] z-10 font-bold text-[#e6d3a0]/60 whitespace-nowrap"
           style={{
             fontSize: '1.5rem',
             fontFamily: "var(--font-cinzel)",
