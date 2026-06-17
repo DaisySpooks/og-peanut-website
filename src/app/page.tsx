@@ -104,6 +104,7 @@ export default function Home() {
   const [subtitleFade, setSubtitleFade] = useState(false);
   const [cursorVisible, setCursorVisible] = useState(false);
   const [dropdownVisible, setDropdownVisible] = useState(false);
+  const [visibleCount, setVisibleCount] = useState(0);
 
   useEffect(() => {
     let interval: ReturnType<typeof setInterval> | null = null;
@@ -169,6 +170,15 @@ export default function Home() {
     startCycle();
     return clear;
   }, []);
+
+  useEffect(() => {
+    if (!dropdownVisible) return;
+    const timers = SIGNS.map((_, i) =>
+      setTimeout(() => setVisibleCount(i + 1), i * 100)
+    );
+    return () => timers.forEach(clearTimeout);
+  }, [dropdownVisible]);
+
   const isOpaqueAt = useAlphaHitTesters();
   const signElsRef = useRef<Map<string, HTMLImageElement>>(new Map());
 
@@ -293,75 +303,45 @@ export default function Home() {
             )}
           </span>
         </p>
-        <div
-          className="mt-2"
-          style={{
-            position: 'relative',
-            display: 'inline-block',
-            opacity: dropdownVisible ? 1 : 0,
-            transition: 'opacity 0.5s ease',
-            pointerEvents: dropdownVisible ? 'auto' : 'none',
-          }}
-        >
-          <select
-            defaultValue=""
-            onChange={(e) => {
-              const id = e.target.value;
-              if (!id) return;
-              const url = SIGN_URLS[id];
-              if (id === 'discord') {
-                window.open(url, '_blank', 'noopener,noreferrer');
-              } else {
-                window.location.href = url;
-              }
-              (e.target as HTMLSelectElement).value = '';
-            }}
-            style={{
-              fontFamily: 'var(--font-cinzel)',
-              fontWeight: 700,
-              color: '#e2c98a',
-              background: 'rgba(0,0,0,0.65)',
-              border: '1px solid rgba(226,201,138,0.45)',
-              borderRadius: '4px',
-              padding: '7px 32px 7px 12px',
-              fontSize: '0.85rem',
-              letterSpacing: '0.05em',
-              appearance: 'none',
-              WebkitAppearance: 'none',
-              cursor: 'pointer',
-              minWidth: '210px',
-              textShadow: shadowLayers,
-            }}
-          >
-            <option value="" disabled style={{ color: '#888', background: '#111' }}></option>
-            {SIGNS.map((sign) => {
-              const labels: Record<string, string> = {
-                discord: 'Discord',
-                mint: 'Mint',
-                radio: 'Radio',
-                poker: 'Poker',
-                pq: 'Peaquilizer',
-                nutaverse: 'Nutaverse',
-              };
+        <div className="mt-2">
+          {(() => {
+            const labels: Record<string, string> = {
+              discord: 'Discord',
+              mint: 'Mint',
+              radio: 'Radio',
+              poker: 'Poker',
+              pq: 'Peaquilizer',
+              nutaverse: 'Nutaverse',
+            };
+            return SIGNS.map((sign, i) => {
+              const visible = i < visibleCount;
               return (
-                <option key={sign.id} value={sign.id} style={{ color: '#e2c98a', background: '#111' }}>
+                <a
+                  key={sign.id}
+                  href={SIGN_URLS[sign.id]}
+                  target={sign.id === 'discord' ? '_blank' : undefined}
+                  rel={sign.id === 'discord' ? 'noopener noreferrer' : undefined}
+                  style={{
+                    display: 'block',
+                    fontFamily: 'var(--font-cinzel)',
+                    fontWeight: 700,
+                    color: '#e2c98a',
+                    fontSize: '0.85rem',
+                    letterSpacing: '0.05em',
+                    textShadow: shadowLayers,
+                    textDecoration: 'none',
+                    padding: '4px 0',
+                    opacity: visible ? 1 : 0,
+                    transform: visible ? 'translateY(0)' : 'translateY(-4px)',
+                    transition: 'opacity 0.25s ease, transform 0.25s ease',
+                    pointerEvents: visible ? 'auto' : 'none',
+                  }}
+                >
                   {labels[sign.id]}
-                </option>
+                </a>
               );
-            })}
-          </select>
-          <span
-            aria-hidden="true"
-            style={{
-              position: 'absolute',
-              right: '10px',
-              top: '50%',
-              transform: 'translateY(-50%)',
-              color: '#e2c98a',
-              pointerEvents: 'none',
-              fontSize: '0.75rem',
-            }}
-          >▾</span>
+            });
+          })()}
         </div>
       </div>
 
