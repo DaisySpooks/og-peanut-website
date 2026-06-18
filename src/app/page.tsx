@@ -288,11 +288,11 @@ export default function Home() {
       </div>
 
       {/* Mobile header group: logo + subtitle + destination dropdown */}
-      <div className="block md:hidden absolute top-8 inset-x-0 z-40">
+      <div className="block md:hidden absolute top-7 inset-x-0 z-40">
         <img
           src="/images/og-peanut-title.png"
           alt="OG Peanut"
-          className="h-[72px] w-auto ml-[6px]"
+          className="h-[65px] w-auto ml-[30px]"
           style={{
             opacity: introComplete ? 1 : 0,
           }}
