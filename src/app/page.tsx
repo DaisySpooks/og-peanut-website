@@ -381,7 +381,7 @@ export default function Home() {
                       visibility: selectedSign === sign.id ? 'visible' : 'hidden',
                       marginRight: '6px',
                       fontSize: '0.6rem',
-                    }}>▶</span>
+                    }}>{'▶︎'}</span>
                     <span>{labels[sign.id]}</span>
                   </a>
                 );
