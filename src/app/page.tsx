@@ -97,6 +97,7 @@ export default function Home() {
   } | null>(null);
 
   const [hoveredSign, setHoveredSign] = useState<string | null>(null);
+  const [selectedSign, setSelectedSign] = useState<string>('discord');
 
   const SUBTITLE = 'Choose your destination...';
   const [subtitleChars, setSubtitleChars] = useState(0);
@@ -330,7 +331,7 @@ export default function Home() {
               style={{
                 position: 'absolute',
                 inset: '-2px -14px',
-                background: 'rgba(0,0,0,0.32)',
+                background: 'rgba(0, 0, 0, 0.12)',
                 backdropFilter: 'blur(3px)',
                 WebkitBackdropFilter: 'blur(3px)',
                 borderRadius: '3px',
@@ -357,8 +358,11 @@ export default function Home() {
                     href={SIGN_URLS[sign.id]}
                     target={sign.id === 'discord' ? '_blank' : undefined}
                     rel={sign.id === 'discord' ? 'noopener noreferrer' : undefined}
+                    onClick={() => setSelectedSign(sign.id)}
                     style={{
-                      display: 'block',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'flex-end',
                       fontFamily: 'var(--font-cinzel)',
                       fontWeight: 700,
                       color: '#e2c98a',
@@ -373,7 +377,12 @@ export default function Home() {
                       pointerEvents: visible ? 'auto' : 'none',
                     }}
                   >
-                    {labels[sign.id]}
+                    <span aria-hidden="true" style={{
+                      visibility: selectedSign === sign.id ? 'visible' : 'hidden',
+                      marginRight: '6px',
+                      fontSize: '0.6rem',
+                    }}>▶</span>
+                    <span>{labels[sign.id]}</span>
                   </a>
                 );
               });
