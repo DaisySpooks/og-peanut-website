@@ -696,56 +696,47 @@ export default function Home() {
         )}
       </button>
 
-      {/* Desktop subtitle — separate from artboard so it sits above the overlay (z-30).
-          Same transform as the artboard; identical visual position. */}
-      {artboard && <div
-        className="hidden md:block"
+      {/* Desktop subtitle — anchored to the title's viewport position so it stays
+          locked to the title across all viewport sizes. z-40 keeps it above the
+          z-30 black intro overlay. Offsets computed from the 1280×832 reference:
+          title is at (left:48px, top:40px); subtitle maps to viewport (150px, 166px). */}
+      <p
+        className="hidden md:block absolute font-bold whitespace-nowrap pointer-events-none"
         style={{
-          position: 'absolute',
-          top: 0,
-          left: 0,
-          width: artboard.w,
-          height: artboard.h,
-          transformOrigin: '0 0',
-          transform: `translate(${artboard.tx}px, ${artboard.ty}px) scale(${artboard.scale})`,
-          pointerEvents: 'none',
+          top: '115px',
+          left: '215px',
           zIndex: 40,
+          fontSize: '1.25rem',
+          fontFamily: 'var(--font-cinzel)',
+          color: 'rgba(230,211,160,0.6)',
+          textShadow: `
+    0 1px 0 rgba(255,220,160,0.15),
+    0 2px 4px rgba(0,0,0,0.8)
+  `,
+          opacity: introComplete ? 1 : subtitleOpacity,
+          transition: introComplete ? 'none' : subtitleFade ? 'opacity 0.5s ease' : 'none',
         }}
       >
-        <p
-          className="absolute left-[220px] top-[115px] font-bold text-[#e6d3a0]/60 whitespace-nowrap"
-          style={{
-            fontSize: '1.25rem',
-            fontFamily: 'var(--font-cinzel)',
-            textShadow: `
-      0 1px 0 rgba(255,220,160,0.15),
-      0 2px 4px rgba(0,0,0,0.8)
-    `,
-            opacity: introComplete ? 1 : subtitleOpacity,
-            transition: introComplete ? 'none' : subtitleFade ? 'opacity 0.5s ease' : 'none',
-          }}
-        >
-          <span style={{
-            display: 'inline-block',
-            background: 'rgba(0,0,0,0.32)',
-            backdropFilter: 'blur(3px)',
-            WebkitBackdropFilter: 'blur(3px)',
-            paddingLeft: '10px',
-            paddingRight: '10px',
-            paddingTop: '2px',
-            paddingBottom: '2px',
-            borderRadius: '3px',
-          }}>
-            {introComplete ? SUBTITLE : SUBTITLE.slice(0, subtitleChars)}
-            {!introComplete && (
-              <span
-                aria-hidden="true"
-                style={{ animation: 'blockCursorBlink 0.9s steps(1, end) infinite' }}
-              >▋</span>
-            )}
-          </span>
-        </p>
-      </div>}
+        <span style={{
+          display: 'inline-block',
+          background: 'rgba(0,0,0,0.32)',
+          backdropFilter: 'blur(3px)',
+          WebkitBackdropFilter: 'blur(3px)',
+          paddingLeft: '10px',
+          paddingRight: '10px',
+          paddingTop: '2px',
+          paddingBottom: '2px',
+          borderRadius: '3px',
+        }}>
+          {introComplete ? SUBTITLE : SUBTITLE.slice(0, subtitleChars)}
+          {!introComplete && (
+            <span
+              aria-hidden="true"
+              style={{ animation: 'blockCursorBlink 0.9s steps(1, end) infinite' }}
+            >▋</span>
+          )}
+        </span>
+      </p>
     </main>
   );
 }
