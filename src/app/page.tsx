@@ -90,6 +90,56 @@ function useAlphaHitTesters() {
 }
 
 export default function Home() {
+  const audioRef = useRef<HTMLAudioElement | null>(null);
+  const hoverSoundRef = useRef<HTMLAudioElement | null>(null);
+  const prevHoveredSignRef = useRef<string | null>(null);
+  const [audioReady, setAudioReady] = useState(false);
+  const [isMuted, setIsMuted] = useState(false);
+
+  useEffect(() => {
+    const url = '/audio/ambient-forest.MP3';
+    console.log('[audio] creating Audio object with url:', url);
+    const audio = new Audio(url);
+    audio.loop = true;
+    audio.volume = 0.15;
+    audio.addEventListener('canplay', () => console.log('[audio] canplay fired — file loaded OK'));
+    audio.addEventListener('error', (e) => console.error('[audio] error event:', e, 'error code:', audio.error?.code, 'message:', audio.error?.message));
+    audioRef.current = audio;
+    console.log('[audio] Audio object created:', audio);
+    return () => { audio.pause(); audio.src = ''; };
+  }, []);
+
+  useEffect(() => {
+    if (audioReady) return;
+    const trigger = () => {
+      console.log('[audio] trigger fired — calling play(). audioRef.current:', audioRef.current);
+      const promise = audioRef.current?.play();
+      if (promise) {
+        promise.then(() => console.log('[audio] play() resolved — audio is playing')).catch((err) => console.error('[audio] play() rejected:', err));
+      } else {
+        console.warn('[audio] play() returned undefined — audioRef.current was null');
+      }
+      setAudioReady(true);
+      window.removeEventListener('click', trigger);
+      window.removeEventListener('touchstart', trigger);
+      window.removeEventListener('keydown', trigger);
+    };
+    window.addEventListener('pointerdown', trigger);
+    window.addEventListener('click', trigger);
+    window.addEventListener('touchstart', trigger, { passive: true });
+    window.addEventListener('keydown', trigger);
+    return () => {
+      window.removeEventListener('pointerdown', trigger);
+      window.removeEventListener('click', trigger);
+      window.removeEventListener('touchstart', trigger);
+      window.removeEventListener('keydown', trigger);
+    };
+  }, [audioReady]);
+
+  useEffect(() => {
+    if (audioRef.current) audioRef.current.muted = isMuted;
+  }, [isMuted]);
+
   // null until mounted — avoids reading window during render, which causes
   // a server/client mismatch and hydration errors.
   const [artboard, setArtboard] = useState<{
@@ -98,6 +148,22 @@ export default function Home() {
 
   const [hoveredSign, setHoveredSign] = useState<string | null>(null);
   const [selectedSign, setSelectedSign] = useState<string>('discord');
+
+  useEffect(() => {
+    const audio = new Audio('/audio/wood-creak-hover.mp3');
+    audio.volume = 0.07;
+    hoverSoundRef.current = audio;
+    return () => { audio.src = ''; };
+  }, []);
+
+  useEffect(() => {
+    if (window.innerWidth < DESKTOP_BREAKPOINT) return;
+    if (hoveredSign !== null && hoveredSign !== prevHoveredSignRef.current) {
+      const snd = hoverSoundRef.current;
+      if (snd) { snd.currentTime = 0; snd.play().catch(() => {}); }
+    }
+    prevHoveredSignRef.current = hoveredSign;
+  }, [hoveredSign]);
 
   const SUBTITLE = 'Choose your destination...';
   const [subtitleChars, setSubtitleChars] = useState(0);
@@ -583,6 +649,41 @@ export default function Home() {
           </div>
         </div>
       </div>}
+
+      {/* Mute/unmute ambient audio — always visible */}
+      <button
+        onClick={() => setIsMuted(m => !m)}
+        aria-label={isMuted ? 'Unmute ambient audio' : 'Mute ambient audio'}
+        style={{
+          position: 'fixed',
+          bottom: '16px',
+          right: '16px',
+          zIndex: 100,
+          background: 'rgba(0,0,0,0.45)',
+          backdropFilter: 'blur(4px)',
+          WebkitBackdropFilter: 'blur(4px)',
+          border: '1px solid rgba(226,201,138,0.3)',
+          borderRadius: '50%',
+          width: '36px',
+          height: '36px',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          cursor: 'pointer',
+          color: '#e2c98a',
+          padding: 0,
+        }}
+      >
+        {isMuted ? (
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M3.63 3.63a1 1 0 0 0-1.41 1.41L7.29 10.1 7 10H4a1 1 0 0 0-1 1v2a1 1 0 0 0 1 1h3l5 5v-6.17l4.18 4.18A6.92 6.92 0 0 1 14 18.28V20a1 1 0 0 0 1.63.77l.07-.06 1.38 1.38a1 1 0 0 0 1.41-1.41L3.63 3.63zM19 12c0 .82-.15 1.61-.41 2.34l1.53 1.53A8.9 8.9 0 0 0 21 12c0-4.28-3-7.86-7-8.77V5.3c2.89.86 5 3.54 5 6.7zm-7-8L9.91 6.09 12 8.18V4z"/>
+          </svg>
+        ) : (
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3A4.5 4.5 0 0 0 14 7.97v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/>
+          </svg>
+        )}
+      </button>
 
       {/* Desktop subtitle — separate from artboard so it sits above the overlay (z-30).
           Same transform as the artboard; identical visual position. */}
