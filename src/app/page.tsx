@@ -52,7 +52,7 @@ const SIGN_URLS: Record<string, string> = {
   radio: 'https://ogpeanut-radio.com/',
   poker: 'https://poker.peanut-hub.com/',
   pq: 'https://plz.veraity.com/',
-  nutaverse: 'https://oncyber.io/spaces/yK3f3sBsCUw0d6iys8z2',
+  nutaverse: 'https://x.com/ogpeanut_solana',
 };
 
 // Loads each sign's alpha channel once, then exposes a hit test that checks
@@ -424,7 +424,7 @@ export default function Home() {
                 radio: 'Radio',
                 poker: 'Poker',
                 pq: 'Peaqualizer',
-                nutaverse: 'Nutaverse',
+                nutaverse: 'ORANGE ARMY HQ',
               };
               return SIGNS.map((sign, i) => {
                 const visible = i < visibleCount;
@@ -644,17 +644,18 @@ export default function Home() {
             </span>
           </div>
 
-          <div className="absolute right-[190px] top-[503px]">
+          <div className="absolute right-[185px] top-[505px]">
             <span
-              className={`inline-block text-3xl font-bold transition-all duration-200 ${hoveredSign === 'nutaverse' ? 'scale-[1.04] brightness-105' : ''
+              className={`inline-block text-xl font-bold transition-all duration-200 ${hoveredSign === 'nutaverse' ? 'scale-[1.04] brightness-105' : ''
                 }`}
               style={{
                 ...textStyle('rotate(8deg)'),
                 fontFamily: 'var(--font-cinzel)',
                 opacity: 0.7,
+                whiteSpace: 'nowrap',
               }}
             >
-              NUTAVERSE
+              ORANGE ARMY HQ
             </span>
           </div>
         </div>
