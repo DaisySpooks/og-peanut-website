@@ -140,6 +140,16 @@ export default function Home() {
     if (audioRef.current) audioRef.current.muted = isMuted;
   }, [isMuted]);
 
+  useEffect(() => {
+    const handleVisibilityChange = () => {
+      if (document.visibilityState === 'hidden') {
+        audioRef.current?.pause();
+      }
+    };
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+    return () => document.removeEventListener('visibilitychange', handleVisibilityChange);
+  }, []);
+
   // null until mounted — avoids reading window during render, which causes
   // a server/client mismatch and hydration errors.
   const [artboard, setArtboard] = useState<{
