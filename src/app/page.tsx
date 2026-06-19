@@ -630,7 +630,7 @@ export default function Home() {
             </span>
           </div>
 
-          <div className="absolute right-[185px] top-[432px]">
+          <div className="absolute right-[180px] top-[432px]">
             <span
               className={`inline-block text-[1.75rem] font-bold transition-all duration-200 ${hoveredSign === 'pq' ? 'scale-[1.04] brightness-105' : ''
                 }`}
