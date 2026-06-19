@@ -483,7 +483,7 @@ export default function Home() {
 
           {/* Discord: board + text lift together on hover */}
           <div
-            className={`absolute top-0 left-0 w-[370px] cursor-pointer transition-all duration-200 ${hoveredSign === 'discord' ? 'scale-[1.02] brightness-105' : ''
+            className={`absolute top-0 left-0 w-[370px] cursor-pointer transition-all duration-200 ${hoveredSign === 'discord' ? 'scale-[1.04] brightness-105' : ''
               }`}
             style={{ transformOrigin: '40% 17%' }}
           >
@@ -496,7 +496,7 @@ export default function Home() {
           </div>
 
           <div
-            className={`absolute top-0 left-0 w-[365px] cursor-pointer transition-all duration-200 ${hoveredSign === 'mint' ? 'scale-[1.02] brightness-105' : ''
+            className={`absolute top-0 left-0 w-[365px] cursor-pointer transition-all duration-200 ${hoveredSign === 'mint' ? 'scale-[1.04] brightness-105' : ''
               }`}
             style={{ transformOrigin: '40% 32%' }}
           >
@@ -509,7 +509,7 @@ export default function Home() {
           </div>
 
           <div
-            className={`absolute top-0 left-0 w-[360px] cursor-pointer transition-all duration-200 ${hoveredSign === 'radio' ? 'scale-[1.02] brightness-105' : ''
+            className={`absolute top-0 left-0 w-[360px] cursor-pointer transition-all duration-200 ${hoveredSign === 'radio' ? 'scale-[1.04] brightness-105' : ''
               }`}
             style={{ transformOrigin: '39% 45%' }}
           >
@@ -522,7 +522,7 @@ export default function Home() {
           </div>
 
           <div
-            className={`absolute top-[-3px] left-0 w-[355px] cursor-pointer transition-all duration-200 ${hoveredSign === 'poker' ? 'scale-[1.02] brightness-105' : ''
+            className={`absolute top-[-3px] left-0 w-[355px] cursor-pointer transition-all duration-200 ${hoveredSign === 'poker' ? 'scale-[1.04] brightness-105' : ''
               }`}
             style={{ transformOrigin: '39% 60%' }}
           >
@@ -535,7 +535,7 @@ export default function Home() {
           </div>
 
           <div
-            className={`absolute top-[-3px] left-0 w-[350px] cursor-pointer transition-all duration-200 ${hoveredSign === 'pq' ? 'scale-[1.02] brightness-105' : ''
+            className={`absolute top-[-3px] left-0 w-[350px] cursor-pointer transition-all duration-200 ${hoveredSign === 'pq' ? 'scale-[1.04] brightness-105' : ''
               }`}
             style={{ transformOrigin: '38% 74%' }}
           >
@@ -548,7 +548,7 @@ export default function Home() {
           </div>
 
           <div
-            className={`absolute top-[-1px] left-0 w-[345px] cursor-pointer transition-all duration-200 ${hoveredSign === 'nutaverse' ? 'scale-[1.02] brightness-105' : ''
+            className={`absolute top-[-1px] left-0 w-[345px] cursor-pointer transition-all duration-200 ${hoveredSign === 'nutaverse' ? 'scale-[1.04] brightness-105' : ''
               }`}
             style={{ transformOrigin: '38% 89%' }}
           >
@@ -566,7 +566,7 @@ export default function Home() {
 
           <div className="absolute right-[185px] top-[150px]">
             <span
-              className={`inline-block text-4xl font-bold transition-all duration-200 ${hoveredSign === 'discord' ? 'scale-[1.02] brightness-105' : ''
+              className={`inline-block text-4xl font-bold transition-all duration-200 ${hoveredSign === 'discord' ? 'scale-[1.04] brightness-105' : ''
                 }`}
               style={{
                 ...textStyle('rotate(-7deg)'),
@@ -580,7 +580,7 @@ export default function Home() {
 
           <div className="absolute right-[235px] top-[225px]">
             <span
-              className={`inline-block text-4xl font-bold transition-all duration-200 ${hoveredSign === 'mint' ? 'scale-[1.02] brightness-105' : ''
+              className={`inline-block text-4xl font-bold transition-all duration-200 ${hoveredSign === 'mint' ? 'scale-[1.04] brightness-105' : ''
                 }`}
               style={{
                 ...textStyle('rotate(-3deg)'),
@@ -594,7 +594,7 @@ export default function Home() {
 
           <div className="absolute right-[220px] top-[295px]">
             <span
-              className={`inline-block text-4xl font-bold transition-all duration-200 ${hoveredSign === 'radio' ? 'scale-[1.02] brightness-105' : ''
+              className={`inline-block text-4xl font-bold transition-all duration-200 ${hoveredSign === 'radio' ? 'scale-[1.04] brightness-105' : ''
                 }`}
               style={{
                 ...textStyle('rotate(-1deg)'),
@@ -608,7 +608,7 @@ export default function Home() {
 
           <div className="absolute right-[215px] top-[360px]">
             <span
-              className={`inline-block text-4xl font-bold transition-all duration-200 ${hoveredSign === 'poker' ? 'scale-[1.02] brightness-105' : ''
+              className={`inline-block text-4xl font-bold transition-all duration-200 ${hoveredSign === 'poker' ? 'scale-[1.04] brightness-105' : ''
                 }`}
               style={{
                 ...textStyle('rotate(2deg)'),
@@ -622,7 +622,7 @@ export default function Home() {
 
           <div className="absolute right-[185px] top-[432px]">
             <span
-              className={`inline-block text-[1.75rem] font-bold transition-all duration-200 ${hoveredSign === 'pq' ? 'scale-[1.02] brightness-105' : ''
+              className={`inline-block text-[1.75rem] font-bold transition-all duration-200 ${hoveredSign === 'pq' ? 'scale-[1.04] brightness-105' : ''
                 }`}
               style={{
                 ...textStyle('rotate(5deg)'),
@@ -636,7 +636,7 @@ export default function Home() {
 
           <div className="absolute right-[190px] top-[503px]">
             <span
-              className={`inline-block text-3xl font-bold transition-all duration-200 ${hoveredSign === 'nutaverse' ? 'scale-[1.02] brightness-105' : ''
+              className={`inline-block text-3xl font-bold transition-all duration-200 ${hoveredSign === 'nutaverse' ? 'scale-[1.04] brightness-105' : ''
                 }`}
               style={{
                 ...textStyle('rotate(8deg)'),
