@@ -601,9 +601,9 @@ export default function Home() {
         }}
       >
         <p
-          className="absolute left-[660px] top-[340px] font-bold text-[#e6d3a0]/60 whitespace-nowrap"
+          className="absolute left-[220px] top-[115px] font-bold text-[#e6d3a0]/60 whitespace-nowrap"
           style={{
-            fontSize: '1.5rem',
+            fontSize: '1.25rem',
             fontFamily: 'var(--font-cinzel)',
             textShadow: `
       0 1px 0 rgba(255,220,160,0.15),
