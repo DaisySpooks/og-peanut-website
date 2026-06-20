@@ -175,7 +175,7 @@ export default function Home() {
     prevHoveredSignRef.current = hoveredSign;
   }, [hoveredSign]);
 
-  const SUBTITLE = 'Choose your destination...';
+  const SUBTITLE = 'Welcome to the Resistance...';
   const [subtitleChars, setSubtitleChars] = useState(0);
   const [subtitleOpacity, setSubtitleOpacity] = useState(1);
   const [subtitleFade, setSubtitleFade] = useState(false);
