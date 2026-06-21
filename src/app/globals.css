@@ -24,3 +24,11 @@ body {
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
+.nutsFortuneLink {
+  transition: transform 180ms ease, filter 180ms ease;
+}
+
+.nutsFortuneLink:hover {
+  transform: translateY(-4px) scale(1.04);
+  filter: drop-shadow(0 0 12px rgba(255, 135, 45, 0.45));
+}

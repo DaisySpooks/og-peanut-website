@@ -170,7 +170,7 @@ export default function Home() {
     if (window.innerWidth < DESKTOP_BREAKPOINT) return;
     if (hoveredSign !== null && hoveredSign !== prevHoveredSignRef.current) {
       const snd = hoverSoundRef.current;
-      if (snd) { snd.currentTime = 0; snd.play().catch(() => {}); }
+      if (snd) { snd.currentTime = 0; snd.play().catch(() => { }); }
     }
     prevHoveredSignRef.current = hoveredSign;
   }, [hoveredSign]);
@@ -312,6 +312,10 @@ export default function Home() {
         @keyframes blockCursorBlink {
           0%, 50% { opacity: 1; }
           51%, 100% { opacity: 0; }
+        }
+        @keyframes spinNutsWheel {
+          from { transform: rotate(0deg); }
+          to { transform: rotate(360deg); }
         }
       `}</style>
       <video
@@ -659,6 +663,52 @@ export default function Home() {
             </span>
           </div>
         </div>
+
+        {/* Nuts of Fortune — bottom-right of scene, below signboards, clear of mute button */}
+        <a
+          href="https://nutsoffortune.peanut-hub.com/"
+          aria-label="Nuts of Fortune"
+          style={{
+            position: 'absolute',
+            bottom: '10px',
+            right: '82px',
+            zIndex: 50,
+            display: 'block',
+            pointerEvents: 'auto',
+            cursor: 'pointer',
+            transition: 'transform 180ms ease',
+          }}
+          onMouseEnter={(e) => {
+            e.currentTarget.style.transform = 'translateY(-4px) scale(1.01)';
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.transform = 'translateY(0) scale(1)';
+          }}
+        >
+          <div
+            style={{
+              position: 'relative',
+              width: '190px',
+              height: '190px',
+              transform: 'rotate(7deg)',
+              transformOrigin: 'center bottom',
+              filter:
+                'drop-shadow(0 10px 12px rgba(0,0,0,0.65)) drop-shadow(0 0 8px rgba(255,120,35,0.18))',
+            }}
+          >
+            <img
+              src="/images/nuts-fortune-sign-base.png"
+              alt="Nuts of Fortune"
+              style={{
+                position: 'absolute',
+                inset: 0,
+                width: '100%',
+                height: '100%',
+                objectFit: 'contain',
+              }}
+            />
+          </div>
+        </a>
       </div>}
 
       {/* Mute/unmute ambient audio — always visible */}
@@ -687,11 +737,11 @@ export default function Home() {
       >
         {isMuted ? (
           <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
-            <path d="M3.63 3.63a1 1 0 0 0-1.41 1.41L7.29 10.1 7 10H4a1 1 0 0 0-1 1v2a1 1 0 0 0 1 1h3l5 5v-6.17l4.18 4.18A6.92 6.92 0 0 1 14 18.28V20a1 1 0 0 0 1.63.77l.07-.06 1.38 1.38a1 1 0 0 0 1.41-1.41L3.63 3.63zM19 12c0 .82-.15 1.61-.41 2.34l1.53 1.53A8.9 8.9 0 0 0 21 12c0-4.28-3-7.86-7-8.77V5.3c2.89.86 5 3.54 5 6.7zm-7-8L9.91 6.09 12 8.18V4z"/>
+            <path d="M3.63 3.63a1 1 0 0 0-1.41 1.41L7.29 10.1 7 10H4a1 1 0 0 0-1 1v2a1 1 0 0 0 1 1h3l5 5v-6.17l4.18 4.18A6.92 6.92 0 0 1 14 18.28V20a1 1 0 0 0 1.63.77l.07-.06 1.38 1.38a1 1 0 0 0 1.41-1.41L3.63 3.63zM19 12c0 .82-.15 1.61-.41 2.34l1.53 1.53A8.9 8.9 0 0 0 21 12c0-4.28-3-7.86-7-8.77V5.3c2.89.86 5 3.54 5 6.7zm-7-8L9.91 6.09 12 8.18V4z" />
           </svg>
         ) : (
           <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
-            <path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3A4.5 4.5 0 0 0 14 7.97v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/>
+            <path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3A4.5 4.5 0 0 0 14 7.97v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z" />
           </svg>
         )}
       </button>
