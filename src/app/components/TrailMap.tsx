@@ -4,7 +4,7 @@ import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 
 const SECTIONS = [
   { id: 'nut-reserve',  label: 'Nut Reserve',  x: 78, y: 10 },
-  { id: 'the-hoard',    label: 'The Hoard',     x: 18, y: 25 },
+  { id: 'the-hoard',    label: 'The Stash',     x: 18, y: 25 },
   { id: 'game-pit',     label: 'Game Pit',       x: 75, y: 40 },
   { id: 'signal-tower', label: 'Signal Tower',   x: 20, y: 56 },
   { id: 'gallery',      label: 'Gallery',         x: 72, y: 72 },
