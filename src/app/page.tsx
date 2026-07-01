@@ -1,6 +1,14 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
+import TrailMap from './components/TrailMap';
+import NutReserve from './sections/NutReserve';
+import TheHoard from './sections/TheHoard';
+import GamePit from './sections/GamePit';
+import SignalTower from './sections/SignalTower';
+import Gallery from './sections/Gallery';
+import Outpost from './sections/Outpost';
+import RoomTransition from './sections/RoomTransition';
 
 const VIDEO_W = 1920;
 const VIDEO_H = 1080;
@@ -26,10 +34,8 @@ const shadowLayers = [
 ].join(', ');
 
 const textStyle = (rotate: string): React.CSSProperties => ({
-  color: '#e2c98a',
   opacity: 0.88,
   transform: rotate,
-  textShadow: shadowLayers,
 });
 
 // Sign boards in DOM/paint order (bottom to top). A single hit-test pass
@@ -46,13 +52,13 @@ const SIGNS = [
 const SIGNS_TOPMOST_FIRST = [...SIGNS].reverse();
 const SIGN_SRCS = SIGNS.map((s) => s.src);
 
-const SIGN_URLS: Record<string, string> = {
-  discord: 'https://discord.com/invite/UPR3FZBCzn',
-  mint: 'https://www.launchmynft.io/mint/peanutprotocol',
-  radio: 'https://ogpeanut-radio.com/',
-  poker: 'https://poker.peanut-hub.com/',
-  pq: 'https://plz.veraity.com/',
-  nutaverse: 'https://x.com/ogpeanut_solana',
+const SIGN_TARGETS: Record<string, string> = {
+  discord: 'nut-reserve',
+  mint: 'the-hoard',
+  radio: 'signal-tower',
+  poker: 'game-pit',
+  pq: 'gallery',
+  nutaverse: 'outpost',
 };
 
 // Loads each sign's alpha channel once, then exposes a hit test that checks
@@ -273,11 +279,8 @@ export default function Home() {
 
   const handleSignsClick = () => {
     if (hoveredSign) {
-      if (hoveredSign === 'discord') {
-        window.open(SIGN_URLS[hoveredSign], '_blank', 'noopener,noreferrer');
-      } else {
-        window.location.href = SIGN_URLS[hoveredSign];
-      }
+      const sectionId = SIGN_TARGETS[hoveredSign];
+      document.getElementById(sectionId)?.scrollIntoView({ behavior: 'smooth' });
     }
   };
 
@@ -307,7 +310,7 @@ export default function Home() {
       : 'opacity 400ms ease';
 
   return (
-    <main className="relative h-screen w-screen overflow-hidden bg-black">
+    <main className="relative w-screen bg-black">
       <style>{`
         @keyframes blockCursorBlink {
           0%, 50% { opacity: 1; }
@@ -318,6 +321,8 @@ export default function Home() {
           to { transform: rotate(360deg); }
         }
       `}</style>
+
+      <section id="campfire" className="relative h-screen w-screen overflow-hidden">
       <video
         autoPlay
         muted
@@ -355,6 +360,14 @@ export default function Home() {
       <div className="absolute inset-y-0 right-0 w-48 z-20 pointer-events-none hidden md:block"
         style={{ background: 'linear-gradient(to left, #000 0%, transparent 100%)' }} />
 
+      {/* Cinematic bottom fade — hero dissolves to black before Nut Reserve begins,
+          so the two sections blend with no visible seam. */}
+      <div className="absolute inset-x-0 bottom-0 z-20 pointer-events-none"
+        style={{
+          height: '40vh',
+          background: 'linear-gradient(to bottom, transparent 0%, rgba(0,0,0,0.22) 40%, rgba(0,0,0,0.65) 72%, rgba(0,0,0,0.97) 100%)',
+        }} />
+
       {/* Desktop logo */}
       <div className="hidden md:block absolute top-10 left-12 z-20">
         <img
@@ -381,8 +394,6 @@ export default function Home() {
           className="mt-2 pl-20 text-right text-base font-bold whitespace-nowrap"
           style={{
             fontFamily: 'var(--font-cinzel)',
-            color: '#e6d3a0',
-            textShadow: '0 1px 0 rgba(255,220,160,0.15), 0 2px 4px rgba(0,0,0,0.8)',
             opacity: introComplete ? 1 : subtitleOpacity,
             transition: introComplete ? 'none' : subtitleFade ? 'opacity 0.5s ease' : 'none',
           }}
@@ -398,7 +409,9 @@ export default function Home() {
             paddingBottom: '2px',
             borderRadius: '3px',
           }}>
-            {introComplete ? SUBTITLE : SUBTITLE.slice(0, subtitleChars)}
+            <span className="hero-gold-text">
+              {introComplete ? SUBTITLE : SUBTITLE.slice(0, subtitleChars)}
+            </span>
             {!introComplete && cursorVisible && (
               <span aria-hidden="true" style={{ animation: 'blockCursorBlink 0.9s steps(1, end) infinite' }}>▋</span>
             )}
@@ -423,22 +436,24 @@ export default function Home() {
             />
             {(() => {
               const labels: Record<string, string> = {
-                discord: 'Discord',
-                mint: 'Mint',
-                radio: 'Radio',
-                poker: 'Poker',
-                pq: 'Peaqualizer',
-                nutaverse: 'ORANGE ARMY HQ',
+                discord: 'Nut Reserve',
+                mint: 'The Hoard',
+                radio: 'Signal Tower',
+                poker: 'Game Pit',
+                pq: 'Gallery',
+                nutaverse: 'Outpost',
               };
               return SIGNS.map((sign, i) => {
                 const visible = i < visibleCount;
                 return (
                   <a
                     key={sign.id}
-                    href={SIGN_URLS[sign.id]}
-                    target={sign.id === 'discord' ? '_blank' : undefined}
-                    rel={sign.id === 'discord' ? 'noopener noreferrer' : undefined}
-                    onClick={() => setSelectedSign(sign.id)}
+                    href={`#${SIGN_TARGETS[sign.id]}`}
+                    onClick={(e) => {
+                      e.preventDefault();
+                      setSelectedSign(sign.id);
+                      document.getElementById(SIGN_TARGETS[sign.id])?.scrollIntoView({ behavior: 'smooth' });
+                    }}
                     style={{
                       display: 'flex',
                       alignItems: 'center',
@@ -578,65 +593,69 @@ export default function Home() {
         {/* All text overlays */}
         <div className="absolute right-0 top-0 z-[60]">
 
-          <div className="absolute right-[185px] top-[150px]">
+          <div className="absolute right-[160px] top-[148px]">
             <span
-              className={`inline-block text-4xl font-bold transition-all duration-200 ${hoveredSign === 'discord' ? 'scale-[1.04] brightness-105' : ''
+              className={`hero-gold-text inline-block text-[1.9rem] font-bold transition-all duration-200 ${hoveredSign === 'discord' ? 'scale-[1.04] brightness-105' : ''
                 }`}
               style={{
                 ...textStyle('rotate(-7deg)'),
                 fontFamily: 'var(--font-cinzel)',
                 opacity: 0.7,
+                whiteSpace: 'nowrap',
               }}
             >
-              DISCORD
+              NUT RESERVE
             </span>
           </div>
 
-          <div className="absolute right-[235px] top-[225px]">
+          <div className="absolute right-[180px] top-[228px]">
             <span
-              className={`inline-block text-4xl font-bold transition-all duration-200 ${hoveredSign === 'mint' ? 'scale-[1.04] brightness-105' : ''
+              className={`hero-gold-text inline-block text-3xl font-bold transition-all duration-200 ${hoveredSign === 'mint' ? 'scale-[1.04] brightness-105' : ''
                 }`}
               style={{
-                ...textStyle('rotate(-3deg)'),
+                ...textStyle('rotate(-4deg)'),
                 fontFamily: 'var(--font-cinzel)',
                 opacity: 0.7,
+                whiteSpace: 'nowrap',
               }}
             >
-              MINT
+              THE HOARD
             </span>
           </div>
 
-          <div className="absolute right-[220px] top-[295px]">
+          <div className="absolute right-[170px] top-[299px]">
             <span
-              className={`inline-block text-4xl font-bold transition-all duration-200 ${hoveredSign === 'radio' ? 'scale-[1.04] brightness-105' : ''
+              className={`hero-gold-text inline-block text-[1.65rem] font-bold transition-all duration-200 ${hoveredSign === 'radio' ? 'scale-[1.04] brightness-105' : ''
                 }`}
               style={{
                 ...textStyle('rotate(-1deg)'),
                 fontFamily: 'var(--font-cinzel)',
                 opacity: 0.7,
+                whiteSpace: 'nowrap',
               }}
             >
-              RADIO
+              SIGNAL TOWER
             </span>
           </div>
 
-          <div className="absolute right-[215px] top-[360px]">
+          <div className="absolute right-[200px] top-[360px]">
             <span
-              className={`inline-block text-4xl font-bold transition-all duration-200 ${hoveredSign === 'poker' ? 'scale-[1.04] brightness-105' : ''
+              className={`hero-gold-text inline-block text-[2rem] font-bold transition-all duration-200 ${hoveredSign === 'poker' ? 'scale-[1.04] brightness-105' : ''
                 }`}
               style={{
                 ...textStyle('rotate(2deg)'),
                 fontFamily: 'var(--font-cinzel)',
                 opacity: 0.7,
+                whiteSpace: 'nowrap',
               }}
             >
-              POKER
+              GAME PIT
             </span>
           </div>
 
-          <div className="absolute right-[180px] top-[432px]">
+          <div className="absolute right-[205px] top-[428px]">
             <span
-              className={`inline-block text-[1.75rem] font-bold transition-all duration-200 ${hoveredSign === 'pq' ? 'scale-[1.04] brightness-105' : ''
+              className={`hero-gold-text inline-block text-[2rem] font-bold transition-all duration-200 ${hoveredSign === 'pq' ? 'scale-[1.04] brightness-105' : ''
                 }`}
               style={{
                 ...textStyle('rotate(5deg)'),
@@ -644,13 +663,13 @@ export default function Home() {
                 opacity: 0.7,
               }}
             >
-              PEAQUALIZER
+              GALLERY
             </span>
           </div>
 
-          <div className="absolute right-[185px] top-[505px]">
+          <div className="absolute right-[212px] top-[500px]">
             <span
-              className={`inline-block text-xl font-bold transition-all duration-200 ${hoveredSign === 'nutaverse' ? 'scale-[1.04] brightness-105' : ''
+              className={`hero-gold-text inline-block text-[1.85rem] font-bold transition-all duration-200 ${hoveredSign === 'nutaverse' ? 'scale-[1.04] brightness-105' : ''
                 }`}
               style={{
                 ...textStyle('rotate(8deg)'),
@@ -659,7 +678,7 @@ export default function Home() {
                 whiteSpace: 'nowrap',
               }}
             >
-              ORANGE ARMY HQ
+              OUTPOST
             </span>
           </div>
         </div>
@@ -758,11 +777,6 @@ export default function Home() {
           zIndex: 40,
           fontSize: '1.25rem',
           fontFamily: 'var(--font-cinzel)',
-          color: 'rgba(230,211,160,0.6)',
-          textShadow: `
-    0 1px 0 rgba(255,220,160,0.15),
-    0 2px 4px rgba(0,0,0,0.8)
-  `,
           opacity: introComplete ? 1 : subtitleOpacity,
           transition: introComplete ? 'none' : subtitleFade ? 'opacity 0.5s ease' : 'none',
         }}
@@ -778,7 +792,9 @@ export default function Home() {
           paddingBottom: '2px',
           borderRadius: '3px',
         }}>
-          {introComplete ? SUBTITLE : SUBTITLE.slice(0, subtitleChars)}
+          <span className="hero-gold-text">
+            {introComplete ? SUBTITLE : SUBTITLE.slice(0, subtitleChars)}
+          </span>
           {!introComplete && (
             <span
               aria-hidden="true"
@@ -787,6 +803,20 @@ export default function Home() {
           )}
         </span>
       </p>
+      </section>
+
+      <TrailMap />
+      <NutReserve />
+      <RoomTransition />
+      <TheHoard />
+      <RoomTransition />
+      <GamePit />
+      <RoomTransition />
+      <SignalTower />
+      <RoomTransition />
+      <Gallery />
+      <RoomTransition />
+      <Outpost />
     </main>
   );
 }
